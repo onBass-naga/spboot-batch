@@ -24,10 +24,16 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+processResources.destinationDir = compileJava.destinationDir
+compileJava.dependsOn processResources
+compileGroovy.dependsOn compileJava
+
 dependencies {
     compile("org.codehaus.groovy:groovy-all:2.4.4")
     compile("org.springframework.boot:spring-boot-starter-batch")
-    compile("org.hsqldb:hsqldb")
+    compile("com.h2database:h2:1.4.192")
+    compile("org.seasar.doma:doma:2.6.0")
+
     testCompile("junit:junit")
 }
 

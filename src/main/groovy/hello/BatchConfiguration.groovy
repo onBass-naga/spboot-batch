@@ -36,15 +36,15 @@ class BatchConfiguration {
 
 
     @Bean
-    FlatFileItemReader<Person> reader() {
-        FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>()
+    FlatFileItemReader<PersonG> reader() {
+        FlatFileItemReader<PersonG> reader = new FlatFileItemReader<PersonG>()
         reader.setResource(new ClassPathResource("sample-data.csv"))
-        reader.setLineMapper(new DefaultLineMapper<Person>() {{
+        reader.setLineMapper(new DefaultLineMapper<PersonG>() {{
             setLineTokenizer(new DelimitedLineTokenizer() {{
                 setNames(["firstName", "lastName"] as String[])
             }})
-            setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
-                setTargetType(Person.class)
+            setFieldSetMapper(new BeanWrapperFieldSetMapper<PersonG>() {{
+                setTargetType(PersonG.class)
             }})
         }})
         return reader
@@ -56,10 +56,10 @@ class BatchConfiguration {
     }
 
     @Bean
-    JdbcBatchItemWriter<Person> writer() {
-        JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>()
-        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>())
-        writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)")
+    JdbcBatchItemWriter<PersonG> writer() {
+        JdbcBatchItemWriter<PersonG> writer = new JdbcBatchItemWriter<PersonG>()
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<PersonG>())
+        writer.setSql("INSERT INTO PERSON (first_name, last_name) VALUES (:firstName, :lastName)")
         writer.setDataSource(dataSource)
         return writer
     }
@@ -83,7 +83,7 @@ class BatchConfiguration {
     @Bean
     Step step1() {
         return stepBuilderFactory.get("step1")
-                .<Person, Person> chunk(10)
+                .<PersonG, PersonG> chunk(10)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
